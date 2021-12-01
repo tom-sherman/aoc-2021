@@ -1,17 +1,10 @@
-let intOfBool = b =>
-  if b {
-    1
-  } else {
-    0
-  }
-
 let rec countAdjacentIncreasingElements = (s, count) =>
   switch s->Seq.uncons {
   | None => count
   | Some(current, tail) =>
     switch tail->Seq.uncons {
     | None => count
-    | Some(next, _) => countAdjacentIncreasingElements(tail, count + intOfBool(next > current))
+    | Some(next, _) => countAdjacentIncreasingElements(tail, count + Bool.toInt(next > current))
     }
   }
 
