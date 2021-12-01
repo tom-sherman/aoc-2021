@@ -17,8 +17,7 @@ let rec countAdjacentIncreasingElements = (s, count) =>
 
 let solveDay1 = input =>
   input
-  ->Js.String2.split("\n")
-  ->Seq.fromArray
+  ->String.splitSeq("\n")
   ->Seq.map(line => line->Belt.Int.fromString->Belt.Option.getExn)
   ->countAdjacentIncreasingElements(0)
 
@@ -39,8 +38,7 @@ let sum = xs => xs->Seq.reduce(0, (a, b) => a + b)
 
 let solveDay2 = input =>
   input
-  ->Js.String2.split("\n")
-  ->Seq.fromArray
+  ->String.splitSeq("\n")
   ->Seq.map(line => line->Belt.Int.fromString->Belt.Option.getExn)
   ->windows(3)
   ->Seq.map(sum)
