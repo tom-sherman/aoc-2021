@@ -13,8 +13,8 @@ npm i
 npm run build
 ```
 
-Then pass it's path to `run.js` (without the .res file extension) eg.
+Then pass it's path to `run.js` (without the .res file extension), optionally include a part number (1 or 2) eg.
 
 ```
-node run.js example/Demo
+node run.js example/Demo 2
 ```
