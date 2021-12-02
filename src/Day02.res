@@ -1,11 +1,8 @@
-type move = Forward(int) | Down(int) | Up(int)
-
 @val external parseInt: string => int = "parseInt"
 
-let addPair = ((a, b), (c, d)) => (a + c, b + d)
-let pairProduct = ((a, b)) => a * b
+type move = Forward(int) | Down(int) | Up(int)
 
-let solveDay1 = input =>
+let parse = input =>
   input
   ->String.splitSeq("\n")
   ->Seq.map(line =>
@@ -20,6 +17,13 @@ let solveDay1 = input =>
     | _ => Js.Exn.raiseError("Couldn't parse line")
     }
   )
+
+let addPair = ((a, b), (c, d)) => (a + c, b + d)
+let pairProduct = ((a, b)) => a * b
+
+let solveDay1 = input =>
+  input
+  ->parse
   ->Seq.map(move =>
     switch move {
     | Forward(n) => (n, 0)
@@ -34,19 +38,7 @@ type position = {horizontal: int, depth: int, aim: int}
 
 let solveDay2 = input =>
   input
-  ->String.splitSeq("\n")
-  ->Seq.map(line =>
-    switch line->Js.String2.split(" ") {
-    | [direction, amount] =>
-      switch direction {
-      | "forward" => Forward(parseInt(amount))
-      | "up" => Up(parseInt(amount))
-      | "down" => Down(parseInt(amount))
-      | _ => Js.Exn.raiseError("Couldn't parse line")
-      }
-    | _ => Js.Exn.raiseError("Couldn't parse line")
-    }
-  )
+  ->parse
   ->Seq.reduce({horizontal: 0, depth: 0, aim: 0}, (pos, move) =>
     switch move {
     | Down(n) => {...pos, aim: pos.aim + n}
