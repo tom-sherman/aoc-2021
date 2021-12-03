@@ -40,5 +40,58 @@ let solveDay1 = input => {
 
   gamma->parseIntWithRadix(~radix=2) * epsilon->parseIntWithRadix(~radix=2)
 }
+let solveDay2 = input => {
+  let rec filter = (words, position, bitCritieria) =>
+    switch words->Seq.uncons {
+    | None => Js.Exn.raiseError("Should not happen")
+    | Some(firstWord, rest) =>
+      if rest->Seq.isEmpty {
+        firstWord
+      } else {
+        let sum = makeSum(words->Seq.transpose->Seq.get(position)->Belt.Option.getExn)
+        let newWords =
+          words->Seq.filter(word => bitCritieria(sum, word->Seq.get(position)->Belt.Option.getExn))
 
-let solve = solveDay1
+        filter(newWords, position + 1, bitCritieria)
+      }
+    }
+
+  let words = input->String.splitSeq("\n")->Seq.map(String.explodeSeq)
+
+  let generatorBitCriteria = ({countOnes, countZeros}, char) =>
+    if countOnes === countZeros {
+      char === "1"
+    } else if countOnes > countZeros {
+      char === "1"
+    } else {
+      char === "0"
+    }
+
+  let scrubberBitCriteria = ({countOnes, countZeros}, char) =>
+    if countOnes === countZeros {
+      char === "0"
+    } else if countOnes > countZeros {
+      char === "0"
+    } else {
+      char === "1"
+    }
+
+  let generatorRating =
+    filter(words, 0, generatorBitCriteria)
+    ->Seq.reduce("", (a, b) => a ++ b)
+    ->parseIntWithRadix(~radix=2)
+
+  let scrubberRating =
+    filter(words, 0, scrubberBitCriteria)
+    ->Seq.reduce("", (a, b) => a ++ b)
+    ->parseIntWithRadix(~radix=2)
+
+  generatorRating * scrubberRating
+}
+
+let solve = (input, part) =>
+  switch part {
+  | "1" => solveDay1(input)
+  | "2" => solveDay2(input)
+  | _ => Js.Exn.raiseError(`Unhandled part ${part}`)
+  }

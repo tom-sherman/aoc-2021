@@ -631,3 +631,9 @@ let rec fromList = l =>
   | list{} => Nil
   | list{head, ...tail} => Cons(head, () => fromList(tail))
   }
+
+let get = (xs, i) =>
+  switch xs->drop(i)->uncons {
+  | None => None
+  | Some(x, _) => Some(x)
+  }
