@@ -1,5 +1,3 @@
-@val external parseIntWithRadix: (string, ~radix: int) => int = "parseInt"
-
 type sum = {countOnes: int, countZeros: int}
 type rates = {epsilon: string, gamma: string}
 
@@ -15,30 +13,29 @@ let makeSum = word =>
 let solveDay1 = input => {
   let columns = input->String.splitSeq("\n")->Seq.map(String.explodeSeq)->Seq.transpose
 
-  let allSums = columns->Seq.map(makeSum)
-  let {gamma, epsilon} = allSums->Seq.reduce({gamma: "", epsilon: ""}, (
-    {gamma, epsilon},
-    {countOnes, countZeros},
-  ) => {
-    let newGammaChar = if countOnes > countZeros {
-      "1"
-    } else {
-      "0"
-    }
+  let {gamma, epsilon} =
+    columns
+    ->Seq.map(makeSum)
+    ->Seq.reduce({gamma: "", epsilon: ""}, ({gamma, epsilon}, {countOnes, countZeros}) => {
+      let newGammaChar = if countOnes > countZeros {
+        "1"
+      } else {
+        "0"
+      }
 
-    let newEpsilonChar = if countOnes > countZeros {
-      "0"
-    } else {
-      "1"
-    }
+      let newEpsilonChar = if countOnes > countZeros {
+        "0"
+      } else {
+        "1"
+      }
 
-    {
-      gamma: `${gamma}${newGammaChar}`,
-      epsilon: `${epsilon}${newEpsilonChar}`,
-    }
-  })
+      {
+        gamma: `${gamma}${newGammaChar}`,
+        epsilon: `${epsilon}${newEpsilonChar}`,
+      }
+    })
 
-  gamma->parseIntWithRadix(~radix=2) * epsilon->parseIntWithRadix(~radix=2)
+  gamma->Int.fromStringWithRadix(~radix=2) * epsilon->Int.fromStringWithRadix(~radix=2)
 }
 let solveDay2 = input => {
   let rec filter = (words, position, bitCritieria) =>
@@ -79,12 +76,12 @@ let solveDay2 = input => {
   let generatorRating =
     filter(words, 0, generatorBitCriteria)
     ->Seq.reduce("", (a, b) => a ++ b)
-    ->parseIntWithRadix(~radix=2)
+    ->Int.fromStringWithRadix(~radix=2)
 
   let scrubberRating =
     filter(words, 0, scrubberBitCriteria)
     ->Seq.reduce("", (a, b) => a ++ b)
-    ->parseIntWithRadix(~radix=2)
+    ->Int.fromStringWithRadix(~radix=2)
 
   generatorRating * scrubberRating
 }

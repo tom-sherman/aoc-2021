@@ -1,5 +1,3 @@
-@val external parseInt: string => int = "parseInt"
-
 type move = Forward(int) | Down(int) | Up(int)
 
 let parse = input =>
@@ -9,9 +7,9 @@ let parse = input =>
     switch line->Js.String2.split(" ") {
     | [direction, amount] =>
       switch direction {
-      | "forward" => Forward(parseInt(amount))
-      | "up" => Up(parseInt(amount))
-      | "down" => Down(parseInt(amount))
+      | "forward" => Forward(Int.fromString(amount))
+      | "up" => Up(Int.fromString(amount))
+      | "down" => Down(Int.fromString(amount))
       | _ => Js.Exn.raiseError("Couldn't parse line")
       }
     | _ => Js.Exn.raiseError("Couldn't parse line")
