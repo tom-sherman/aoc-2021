@@ -54,9 +54,12 @@ let getWinners = (draws, cards) =>
   ->Seq.scan((None, cards), ((_, cards), draw) => {
     let newCards = cards->Seq.map(card => card->BingoCard.mark(draw))
 
-    let maybeWinner = newCards->Seq.find(card => card->BingoCard.isWinner)
+    let maybeWinner =
+      newCards
+      ->Seq.find(card => card->BingoCard.isWinner)
+      ->Belt.Option.map(winner => (winner, draw))
 
-    (maybeWinner->Belt.Option.map(winner => (winner, draw)), newCards)
+    (maybeWinner, newCards)
   })
   ->Seq.filterMap(((maybeWinner, _)) => maybeWinner)
 
