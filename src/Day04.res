@@ -105,6 +105,7 @@ let solveDay1 = input => {
   winningCard->BingoCard.getUnarked->Seq.reduce(0, (acc, {value}) => acc + value) * winningDraw
 }
 
+// FIXME: This is broken
 let solveDay2 = input => {
   let {draws, cards} = parseInput(input)
 
