@@ -15,3 +15,5 @@ let explodeSeq = (str: string): Seq.t<string> =>
 
 // TODO: Make lazy / don't allocate an extra array
 let splitSeq = (str, delimiter) => str->Js.String2.split(delimiter)->Seq.fromArray
+
+@send external padStart: (string, int, string) => string = "padStart"
