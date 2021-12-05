@@ -55,63 +55,32 @@ let lineRange = line =>
     })
   )
 
-let solveDay1 = input => {
-  let lines = input->parse->Seq.filter(line => line.x1 === line.x2 || line.y1 === line.y2)
-  let intersections = ref(0)
-  module Map = Belt.MutableMap.Int
-  let map = Map.make()
+let getIntersectionCount = lines =>
+  lines
+  ->Seq.reduce((0, Belt.Map.Int.empty), ((intersections, map), line) => {
+    let range = lineRange(line)
 
-  lines->Seq.iter(line =>
-    line
-    ->lineRange
-    ->Seq.iter(((x, y)) => {
-      let row = map->Map.get(y)->Belt.Option.getWithDefault(Map.make())
-      switch row->Map.get(x) {
-      | None => {
-          row->Map.set(x, 0)
-          map->Map.set(y, row)
-        }
+    range->Seq.reduce((intersections, map), ((intersections, map), (x, y)) => {
+      let row = map->Belt.Map.Int.get(y)->Belt.Option.getWithDefault(Belt.Map.Int.empty)
+      let (newIntersections, newRow) = switch row->Belt.Map.Int.get(x) {
+      | None => (intersections, row->Belt.Map.Int.set(x, 0))
       | Some(intersectionCount) =>
         if intersectionCount === 0 {
-          intersections := intersections.contents + 1
-          row->Map.set(x, 1)
-          map->Map.set(y, row)
+          (intersections + 1, row->Belt.Map.Int.set(x, 1))
+        } else {
+          (intersections, row)
         }
       }
+
+      (newIntersections, map->Belt.Map.Int.set(y, newRow))
     })
-  )
+  })
+  ->fst
 
-  intersections.contents
-}
+let solveDay1 = input =>
+  input->parse->Seq.filter(line => line.x1 === line.x2 || line.y1 === line.y2)->getIntersectionCount
 
-let solveDay2 = input => {
-  let lines = input->parse
-  let intersections = ref(0)
-  module Map = Belt.MutableMap.Int
-  let map = Map.make()
-
-  lines->Seq.iter(line =>
-    line
-    ->lineRange
-    ->Seq.iter(((x, y)) => {
-      let row = map->Map.get(y)->Belt.Option.getWithDefault(Map.make())
-      switch row->Map.get(x) {
-      | None => {
-          row->Map.set(x, 0)
-          map->Map.set(y, row)
-        }
-      | Some(intersectionCount) =>
-        if intersectionCount === 0 {
-          intersections := intersections.contents + 1
-          row->Map.set(x, 1)
-          map->Map.set(y, row)
-        }
-      }
-    })
-  )
-
-  intersections.contents
-}
+let solveDay2 = input => input->parse->getIntersectionCount
 
 let solve = (input, part) =>
   switch part {
