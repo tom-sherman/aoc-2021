@@ -55,24 +55,26 @@ let lineRange = line =>
     })
   )
 
+module Map = Belt.Map.Int
+
 let getIntersectionCount = lines =>
   lines
-  ->Seq.reduce((0, Belt.Map.Int.empty), ((intersections, map), line) => {
+  ->Seq.reduce((0, Map.empty), ((intersections, map), line) => {
     let range = lineRange(line)
 
     range->Seq.reduce((intersections, map), ((intersections, map), (x, y)) => {
-      let row = map->Belt.Map.Int.get(y)->Belt.Option.getWithDefault(Belt.Map.Int.empty)
-      let (newIntersections, newRow) = switch row->Belt.Map.Int.get(x) {
-      | None => (intersections, row->Belt.Map.Int.set(x, 0))
+      let row = map->Map.get(y)->Belt.Option.getWithDefault(Map.empty)
+      let (newIntersections, newRow) = switch row->Map.get(x) {
+      | None => (intersections, row->Map.set(x, 0))
       | Some(intersectionCount) =>
         if intersectionCount === 0 {
-          (intersections + 1, row->Belt.Map.Int.set(x, 1))
+          (intersections + 1, row->Map.set(x, 1))
         } else {
           (intersections, row)
         }
       }
 
-      (newIntersections, map->Belt.Map.Int.set(y, newRow))
+      (newIntersections, map->Map.set(y, newRow))
     })
   })
   ->fst
