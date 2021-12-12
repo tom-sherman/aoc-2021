@@ -33,7 +33,7 @@ let solveDay1 = input => {
 let solveDay2 = input => {
   let positions = input->Js.String2.split(",")->Js.Array2.map(Js.Float.fromString)
   Js.log(positions->Js.Array2.sortInPlaceWith(floatCompare))
-  let target = positions->median
+  // let target = positions->median
 
   1.
 }
